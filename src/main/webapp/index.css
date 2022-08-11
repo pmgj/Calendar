@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+fieldset {
+    width: 220px;
+    margin: auto;
+}
+
+table {
+    border-collapse: collapse;
+    margin-right: 1em;
+    margin-top: 1em;
+}
+
+th,
+td {
+    border: 1px solid black;
+    height: 1.5em;
+    width: 2em;
+    text-align: center;
+}
+
+td {
+    font-weight: bold;
+}
+
+th {
+    font-weight: normal;
+    font-style: italic;
+    font-size: 90%;
+}
+
+div {
+    width: 80%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+caption {
+    font-weight: bold;
+    color: #555;
+    font-size: 1.35em;
+    line-height: 1.35em;
+}
+
+th:first-child,
+td:first-child,
+.holiday {
+    color: red;
+}
+
+input[type="number"] {
+    width: 60px;
+}
+
+label {
+    display: inline-block;
+    width: 70px;
+}

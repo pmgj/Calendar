@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br">
+
+<head>
+    <title>Calendar</title>
+    <meta charset="UTF-8" />
+    <link type="text/css" rel="stylesheet" href="index.css" />
+    <link type="image/svg" rel="icon" href="icon.svg" />
+    <script type="module" src="GUI.js"></script>
+</head>
+
+<body>
+    <form>
+        <fieldset>
+            <legend>Calendar</legend>
+            <p><label for="month">Month:</label> <input type="number" id="month" name="month" min="1" max="12" /></p>
+            <p><label for="year">Year:</label> <input type="number" id="year" name="year" required="required" /></p>
+            <p><label for="json">Format:</label> JSON <input type="radio" id="json" name="format" checked="checked" />
+                XML <input type="radio" id="xml" name="format" /></p>
+            <p><input type="submit" value="Show" /></p>
+        </fieldset>
+    </form>
+    <div id="output"></div>
+</body>
+
+</html>
