@@ -1,11 +1,12 @@
-/* global XPathResult */
+class GUI {
+    constructor() {
 
-function GUI() {
-    function eraseCalendar() {
+    }
+    eraseCalendar() {
         let output = document.getElementById("output");
         output.innerHTML = "";
     }
-    function fillMonth( {days, name, weeknames}) {
+    fillMonth({ days, name, weeknames }) {
         let table = document.createElement("table");
         let tr = table.insertRow(0);
         let monthName = document.createElement("caption");
@@ -13,9 +14,9 @@ function GUI() {
         table.appendChild(monthName);
         tr = table.insertRow(1);
         let weekdays = Object.entries(weeknames).sort((a, b) => a[1] - b[1]).map(a => a[0]);
-        for (let i = 0; i < weekdays.length; i++) {
+        for(let value of weekdays) {
             let day = document.createElement("th");
-            day.innerHTML = weekdays[i];
+            day.innerHTML = value;
             tr.appendChild(day);
         }
         table.appendChild(tr);
@@ -36,9 +37,9 @@ function GUI() {
         }
         return table;
     }
-    function compute(evt) {
+    compute(evt) {
         evt.preventDefault();
-        eraseCalendar();
+        this.eraseCalendar();
         let form = document.forms[0];
         let year = parseInt(form.year.value, 10);
         let month = parseInt(form.month.value, 10);
@@ -49,21 +50,20 @@ function GUI() {
             let eYear = parser.parseFromString(data, "application/xml");
             let months = eYear.querySelectorAll("month");
             let listOfMonths = [];
-            for (let i = 0; i < months.length; i++) {
-                let month = months[i];
+            for(let month of months) {
                 let obj = {};
                 obj.name = month.getAttribute("name");
                 let days = [];
                 let eDays = month.querySelectorAll("day");
-                for (let j = 0; j < eDays.length; j++) {
-                    days.push({day: parseInt(eDays[j].getAttribute("n")), holiday: eDays[j].getAttribute("holiday")});
+                for (let day of eDays) {
+                    days.push({ day: parseInt(day.getAttribute("n")), holiday: day.getAttribute("holiday") });
                 }
                 obj.days = days;
                 let entries = {};
                 let eEntries = month.querySelectorAll("entry");
-                for (let j = 0; j < eEntries.length; j++) {
-                    let key = eEntries[j].querySelector("key").textContent;
-                    let value = parseInt(eEntries[j].querySelector("value").textContent);
+                for (let entry of eEntries) {
+                    let key = entry.querySelector("key").textContent;
+                    let value = parseInt(entry.querySelector("value").textContent);
                     entries[key] = value;
                 }
                 obj.weeknames = entries;
@@ -71,23 +71,22 @@ function GUI() {
             }
             return listOfMonths;
         };
-        let options = [{type: 'application/json', convert: resolve => resolve.json(), process: processJSON}, {type: 'application/xml', convert: resolve => resolve.text(), process: processXML}];
+        let options = [{ type: 'application/json', convert: resolve => resolve.json(), process: processJSON }, { type: 'application/xml', convert: resolve => resolve.text(), process: processXML }];
         let formatOptions = json ? options[0] : options[1];
         let yearCreation = months => {
             let output = document.getElementById("output");
             for (let month of months) {
-                output.appendChild(fillMonth(month));
+                output.appendChild(this.fillMonth(month));
             }
         };
         let url = month ? `webresources/calendar/${year}/${month}` : `webresources/calendar/${year}`;
-        window.fetch(url, {headers: new Headers({'Accept': formatOptions.type})}).then(formatOptions.convert).then(formatOptions.process).then(yearCreation);
+        window.fetch(url, { headers: new Headers({ 'Accept': formatOptions.type }) }).then(formatOptions.convert).then(formatOptions.process).then(yearCreation);
     }
-    function registerEvents() {
+    registerEvents() {
         let form = document.forms[0];
-        form.onsubmit = compute;
+        form.onsubmit = this.compute.bind(this);
         form.month.focus();
     }
-    return {registerEvents};
 }
 let gui = new GUI();
 gui.registerEvents();
