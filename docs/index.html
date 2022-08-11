@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+    <title>Calendar</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Generate the calendar of any year!" />
+    <meta name="theme-color" content="blue" />
+    <link rel="apple-touch-icon" href="images/icon_192.png" />
+    <link type="text/css" rel="stylesheet" href="index.css" />
+    <link type="image/svg" rel="icon" href="images/icon.svg" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <script type="module" src="scripts/GUI.js"></script>
+    <script async="async" src="scripts/app.js"></script>
+</head>
+
+<body>
+    <form action="#">
+        <fieldset>
+            <legend>Calendar</legend>
+            <p><label for="year">Year:</label> <input type="number" id="year" /> <input type="submit" value="Show" />
+            </p>
+        </fieldset>
+    </form>
+    <div id="answer"></div>
+</body>
+
+</html>

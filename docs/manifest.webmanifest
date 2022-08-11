@@ -1,0 +1,26 @@
+{
+    "short_name": "Calendar",
+    "name": "Calendars of all years",
+    "icons": [
+        {
+            "src": "images/icon_192m.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "maskable"
+        },
+        {
+            "src": "images/icon_512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any"
+        }
+    ],
+    "start_url": "./index.html",
+    "prefer_related_applications": true,
+    "id": "./index.html",
+    "background_color": "red",
+    "theme_color": "blue",
+    "display": "standalone",
+    "lang": "en",
+    "orientation": "any"
+}
