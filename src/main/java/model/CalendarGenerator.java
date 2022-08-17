@@ -1,17 +1,17 @@
 package model;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import jakarta.json.bind.JsonbBuilder;
-import jakarta.xml.bind.JAXBContext;
+
 import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
 
 public class CalendarGenerator {
 
@@ -22,7 +22,7 @@ public class CalendarGenerator {
         fixedHolidays = this.createFixedHolidays();
     }
 
-    private Calendar easter(int year) {
+    private LocalDate easter(int year) {
         double a = year % 19;
         double b = Math.floor(year / 100);
         double c = year % 100;
@@ -37,12 +37,11 @@ public class CalendarGenerator {
         double m = Math.floor((a + 11 * h + 22 * l) / 451);
         double p = Math.floor((h + l - 7 * m + 114) / 31);
         double q = (h + l - 7 * m + 114) % 31;
-        Calendar cal = new GregorianCalendar();
-        cal.set(year, (int) p - 1, (int) q + 1);
-        for (int x = cal.get(Calendar.DAY_OF_MONTH); cal.get(Calendar.DAY_OF_WEEK) != 1; x++) {
-            cal.set(Calendar.DAY_OF_MONTH, x);
+        LocalDate date = LocalDate.of(year, (int) p, (int) q + 1);
+        while (date.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            date.plusDays(1);
         }
-        return cal;
+        return date;
     }
 
     private List<Holiday> createFixedHolidays() {
@@ -64,28 +63,23 @@ public class CalendarGenerator {
     }
 
     private void createMovableHolidays(int year) {
-        Calendar easter = easter(year);
-        Calendar carnival = new GregorianCalendar();
-        carnival.setTime(easter.getTime());
-        carnival.add(Calendar.DAY_OF_MONTH, -47);
-        Calendar corpusChristi = new GregorianCalendar();
-        corpusChristi.setTime(easter.getTime());
-        corpusChristi.add(Calendar.DAY_OF_MONTH, +60);
-        easter.add(Calendar.DAY_OF_MONTH, -2);
         movableHolidays.clear();
-        movableHolidays
-                .add(new Holiday(carnival.get(Calendar.DAY_OF_MONTH), carnival.get(Calendar.MONTH) + 1, "Carnaval"));
-        movableHolidays.add(new Holiday(easter.get(Calendar.DAY_OF_MONTH), easter.get(Calendar.MONTH) + 1,
+        LocalDate easter = easter(year);
+        LocalDate holyFriday = easter.minusDays(2);
+        movableHolidays.add(new Holiday(holyFriday.getDayOfMonth(), holyFriday.getMonthValue(),
                 "Sexta-feira da Paixão"));
-        movableHolidays.add(new Holiday(corpusChristi.get(Calendar.DAY_OF_MONTH), corpusChristi.get(Calendar.MONTH) + 1,
+        LocalDate carnival = easter.minusDays(47);
+        movableHolidays
+                .add(new Holiday(carnival.getDayOfMonth(), carnival.getMonthValue(), "Carnaval"));
+        LocalDate corpusChristi = easter.plusDays(60);
+        movableHolidays.add(new Holiday(corpusChristi.getDayOfMonth(), corpusChristi.getMonthValue(),
                 "Corpus Christi"));
     }
 
-    private int numberOfDays(Calendar date) {
-        int ano = date.get(Calendar.YEAR);
-        int[] numDays = new int[] { 31, (ano % 4 == 0 && (ano % 400 == 0 || ano % 100 != 0)) ? 29 : 28, 31, 30, 31, 30,
+    private int numberOfDays(LocalDate date) {
+        int[] numDays = new int[] { 31, date.isLeapYear() ? 29 : 28, 31, 30, 31, 30,
                 31, 31, 30, 31, 30, 31 };
-        return numDays[date.get(Calendar.MONTH)];
+        return numDays[date.getMonthValue() - 1];
     }
 
     private Holiday getHoliday(int day, int month) {
@@ -104,18 +98,20 @@ public class CalendarGenerator {
     }
 
     private Month computeMonth2(int year, int month, Locale locale) {
-        Calendar date = new GregorianCalendar(year, month, 1);
+        LocalDate date = LocalDate.of(year, month + 1, 1);
+        date.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         List<Day> days = new ArrayList<>();
         for (int i = 0; i < 42; i++) {
             days.add(new Day(0));
         }
-        for (int i = 0, j = date.get(Calendar.DAY_OF_WEEK) - 1; i < numberOfDays(date); i++, j++) {
-            Holiday holiday = getHoliday(i + 1, date.get(Calendar.MONTH) + 1);
+        for (int i = 0, j = date.getDayOfWeek().getValue() - 1; i < numberOfDays(date); i++, j++) {
+            Holiday holiday = getHoliday(i + 1, date.getMonthValue());
             days.set(j, new Day(i + 1, holiday != null ? holiday.getMessage() : null));
         }
-        String monthName = date.getDisplayName(Calendar.MONTH, Calendar.LONG_FORMAT, locale);
-        Map<String, Integer> weekNames = date.getDisplayNames(Calendar.DAY_OF_WEEK, Calendar.SHORT_FORMAT, locale);
-        return new Month(days, monthName, weekNames);
+        String monthName = date.getMonth().getDisplayName(TextStyle.FULL, locale);
+        List<String> daysOfWeekNames = Stream.of(DayOfWeek.values()).map(d -> d.getDisplayName(TextStyle.SHORT, locale))
+                .collect(Collectors.toList());
+        return new Month(days, monthName, daysOfWeekNames);
     }
 
     public Year computeMonth(int ano, int mes, Locale locale) {
@@ -135,15 +131,17 @@ public class CalendarGenerator {
 
     public static void main(String[] args) throws JAXBException {
         CalendarGenerator c = new CalendarGenerator();
-        // Year ano = c.computeMonth(2021, 4, new Locale("pt"));
+        c.createMovableHolidays(2022);
+        System.out.println(c.movableHolidays);
+        // Year ano = c.computeMonth(2022, 2, new Locale("pt"));
 
-        Year ano = c.computeYear(2021, new Locale("pt"));
+        // Year ano = c.computeYear(2022, new Locale("pt"));
         // ano.forEach(mes -> System.out.println(mes));
-        System.out.println(JsonbBuilder.create().toJson(ano));
+        // System.out.println(JsonbBuilder.create().toJson(ano));
 
-        JAXBContext jaxbContext = JAXBContext.newInstance(Year.class);
-        Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        jaxbMarshaller.marshal(ano, System.out);
+        // JAXBContext jaxbContext = JAXBContext.newInstance(Year.class);
+        // Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+        // jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        // jaxbMarshaller.marshal(ano, System.out);
     }
 }

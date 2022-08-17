@@ -1,7 +1,7 @@
 package model;
 
 import java.util.List;
-import java.util.Map;
+
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -11,12 +11,12 @@ public class Month {
 
     private List<Day> days;
     private String name;
-    private Map<String, Integer> weeknames;
+    private List<String> weeknames;
 
     public Month() {
     }
 
-    public Month(List<Day> days, String name, Map<String, Integer> weeknames) {
+    public Month(List<Day> days, String name, List<String> weeknames) {
         this.days = days;
         this.name = name;
         this.weeknames = weeknames;
@@ -40,11 +40,11 @@ public class Month {
         this.name = name;
     }
 
-    public Map<String, Integer> getWeeknames() {
+    public List<String> getWeeknames() {
         return weeknames;
     }
 
-    public void setWeeknames(Map<String, Integer> weeknames) {
+    public void setWeeknames(List<String> weeknames) {
         this.weeknames = weeknames;
     }
 

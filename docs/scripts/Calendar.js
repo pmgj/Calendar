@@ -1,13 +1,15 @@
-import {Feriado} from "./Feriado.js";
-import {Day} from "./Day.js";
+import Holiday from "./Holiday.js";
+import Day from "./Day.js";
 
-function Calendar() {
-    let feriadosMoveis = [];
-    let feriadosFixos = [new Feriado(1, 1, "Confraternização Universal"), new Feriado(21, 4, "Tiradentes"), new Feriado(1, 5, "Dia do Trabalho"), new Feriado(24, 6, "São João"), new Feriado(16, 7, "Nossa Senhora do Carmo"), new Feriado(7, 9, "Independência do Brasil"), new Feriado(12, 10, "Nossa Senhora Aparecida"), new Feriado(28, 10, "Dia do Servidor Público"), new Feriado(2, 11, "Finados"), new Feriado(15, 11, "Proclamação da República"), new Feriado(8, 12, "Nossa Senhora da Conceição"), new Feriado(25, 12, "Natal"), new Feriado(31, 12, "Ano Novo")];
-    function domingoPascoa(ano) {
-        let a = ano % 19;
-        let b = Math.floor(ano / 100);
-        let c = ano % 100;
+export default class Calendar {
+    constructor() {
+        this.movableHolidays = [];
+        this.fixedHolidays = [new Holiday(1, 1, "Confraternização Universal"), new Holiday(21, 4, "Tiradentes"), new Holiday(1, 5, "Dia do Trabalho"), new Holiday(24, 6, "São João"), new Holiday(16, 7, "Nossa Senhora do Carmo"), new Holiday(7, 9, "Independência do Brasil"), new Holiday(12, 10, "Nossa Senhora Aparecida"), new Holiday(28, 10, "Dia do Servidor Público"), new Holiday(2, 11, "Finados"), new Holiday(15, 11, "Proclamação da República"), new Holiday(8, 12, "Nossa Senhora da Conceição"), new Holiday(25, 12, "Natal"), new Holiday(31, 12, "Ano Novo")];
+    }
+    easter(year) {
+        let a = year % 19;
+        let b = Math.floor(year / 100);
+        let c = year % 100;
         let d = Math.floor(b / 4);
         let e = b % 4;
         let f = Math.floor((b + 8) / 25);
@@ -19,53 +21,49 @@ function Calendar() {
         let m = Math.floor((a + 11 * h + 22 * l) / 451);
         let p = Math.floor((h + l - 7 * m + 114) / 31);
         let q = (h + l - 7 * m + 114) % 31;
-        let data = new Date(ano, p - 1, q + 1);
-        for (let x = data.getDate(); data.getDay() !== 0; x++) {
-            data.setDate(x);
+        let date = new Date(year, p - 1, q + 1);
+        for (let x = date.getDate(); date.getDay() !== 0; x++) {
+            date.setDate(x);
         }
-        return data;
+        return date;
     }
-    function gerarFeriadosMoveis(ano) {
-        let pascoa = domingoPascoa(ano);
-        let carnaval = new Date(pascoa);
-        carnaval.setDate(pascoa.getDate() - 47);
-        let corpusChristi = new Date(pascoa);
-        corpusChristi.setDate(pascoa.getDate() + 60);
-        pascoa.setDate(pascoa.getDate() - 2);
-        feriadosMoveis = [];
-        feriadosMoveis.push(new Feriado(carnaval.getDate(), carnaval.getMonth() + 1, "Carnaval"));
-        feriadosMoveis.push(new Feriado(pascoa.getDate(), pascoa.getMonth() + 1, "Sexta-feira da Paixão"));
-        feriadosMoveis.push(new Feriado(corpusChristi.getDate(), corpusChristi.getMonth() + 1, "Corpus Christi"));
+    createMovableHolidays(year) {
+        let easterDay = this.easter(year);
+        let carnival = new Date(easterDay);
+        carnival.setDate(easterDay.getDate() - 47);
+        let corpusChristi = new Date(easterDay);
+        corpusChristi.setDate(easterDay.getDate() + 60);
+        easterDay.setDate(easterDay.getDate() - 2);
+        this.movableHolidays = [];
+        this.movableHolidays.push(new Holiday(carnival.getDate(), carnival.getMonth() + 1, "Carnaval"));
+        this.movableHolidays.push(new Holiday(easterDay.getDate(), easterDay.getMonth() + 1, "Sexta-feira da Paixão"));
+        this.movableHolidays.push(new Holiday(corpusChristi.getDate(), corpusChristi.getMonth() + 1, "Corpus Christi"));
     }
-    function ehFeriado(dia, mes) {
-        let isHoliday = (element) => element.dia === dia && element.mes === mes;
-        return feriadosFixos.find(isHoliday) || feriadosMoveis.find(isHoliday);
+    isHoliday(day, month) {
+        let isHoliday = (element) => element.day === day && element.month === month;
+        return this.fixedHolidays.find(isHoliday) || this.movableHolidays.find(isHoliday);
     }
-    function dias(data) {
-        let ano = data.getFullYear();
-        let numDias = [31, (ano % 4 === 0 && (ano % 400 === 0 || ano % 100 !== 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        return numDias[data.getMonth()];
+    numberOfDays(date) {
+        let year = date.getFullYear();
+        let numDays = [31, (year % 4 === 0 && (year % 400 === 0 || year % 100 !== 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        return numDays[date.getMonth()];
     }
-    function preencherMes(data) {
+    computeMonth(date) {
         let month = new Array(42).fill(new Day(0));
-        for (let i = 0, j = data.getDay(); i < dias(data); i++, j++) {
-            let feriado = ehFeriado(i + 1, data.getMonth() + 1);
-//            month[j] = new Day(i + 1, feriado?.mensagem);
-            month[j] = new Day(i + 1, feriado ? feriado.mensagem : null);
+        for (let i = 0, j = date.getDay(); i < this.numberOfDays(date); i++, j++) {
+            let holiday = this.isHoliday(i + 1, date.getMonth() + 1);
+            month[j] = new Day(i + 1, holiday?.message);
         }
         return month;
     }
-    function calcular(ano) {
+    computeYear(year) {
         let calendar = [];
-        gerarFeriadosMoveis(ano);
-        let data = new Date(ano, 0, 1);
+        this.createMovableHolidays(year);
+        let data = new Date(year, 0, 1);
         for (let i = 0; i < 12; i++) {
             data.setMonth(i);
-            calendar.push(preencherMes(data));
+            calendar.push(this.computeMonth(data));
         }
         return calendar;
     }
-    return {calcular};
 }
-
-export {Calendar};

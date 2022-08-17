@@ -13,8 +13,7 @@ class GUI {
         monthName.innerHTML = name;
         table.appendChild(monthName);
         tr = table.insertRow(1);
-        let weekdays = Object.entries(weeknames).sort((a, b) => a[1] - b[1]).map(a => a[0]);
-        for(let value of weekdays) {
+        for(let value of weeknames) {
             let day = document.createElement("th");
             day.innerHTML = value;
             tr.appendChild(day);
@@ -59,12 +58,10 @@ class GUI {
                     days.push({ day: parseInt(day.getAttribute("n")), holiday: day.getAttribute("holiday") });
                 }
                 obj.days = days;
-                let entries = {};
-                let eEntries = month.querySelectorAll("entry");
-                for (let entry of eEntries) {
-                    let key = entry.querySelector("key").textContent;
-                    let value = parseInt(entry.querySelector("value").textContent);
-                    entries[key] = value;
+                let entries = [];
+                let eEntries = month.querySelectorAll("weeknames");
+                for (let value of eEntries) {
+                    entries.push(value.textContent);
                 }
                 obj.weeknames = entries;
                 listOfMonths.push(obj);

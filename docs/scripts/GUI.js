@@ -1,65 +1,66 @@
-import {Calendar} from "./Calendar.js";
+import Calendar from "./Calendar.js";
 
-function GUI() {
-    let c = new Calendar();
-    function limparTabelas() {
-        let resposta = document.getElementById("answer");
-        resposta.innerHTML = "";
+class GUI {
+    constructor() {
+        this.c = new Calendar();
     }
-    function nomeDoDiaDaSemana(dia) {
+    clearTables() {
+        let answer = document.getElementById("answer");
+        answer.innerHTML = "";
+    }
+    dayOfWeek(day) {
         let nomes = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        return nomes[dia];
+        return nomes[day];
     }
-    function preencherMes(data, monthName) {
-        let tabela = document.createElement("table");
-        let tr = tabela.insertRow(0);
-        let nomeMes = document.createElement("caption");
-        nomeMes.innerHTML = monthName;
-        tabela.appendChild(nomeMes);
-        tr = tabela.insertRow(1);
+    fillMonth(date, monthName) {
+        let table = document.createElement("table");
+        let tr = table.insertRow(0);
+        let caption = document.createElement("caption");
+        caption.innerHTML = monthName;
+        table.appendChild(caption);
+        tr = table.insertRow(1);
         for (let i = 0; i < 7; i++) {
-            let dia = document.createElement("th");
-            dia.innerHTML = nomeDoDiaDaSemana(i);
-            tr.appendChild(dia);
+            let day = document.createElement("th");
+            day.innerHTML = this.dayOfWeek(i);
+            tr.appendChild(day);
         }
-        tabela.appendChild(tr);
-        for (let i = 0; i < data.length; i++) {
+        table.appendChild(tr);
+        for (let i = 0; i < date.length; i++) {
             if (i % 7 === 0) {
-                tr = tabela.insertRow(-1);
+                tr = table.insertRow(-1);
             }
-            if (data[i].dia === 0) {
+            if (date[i].day === 0) {
                 tr.insertCell(-1);
             } else {
                 let td = tr.insertCell(-1);
-                if (data[i].mensagem) {
-                    td.className = "feriado";
-                    td.title = data[i].mensagem;
+                if (date[i].message) {
+                    td.className = "holiday";
+                    td.title = date[i].message;
                 }
-                td.textContent = data[i].dia;
+                td.textContent = date[i].day;
             }
         }
-        return tabela;
+        return table;
     }
-    function calcular() {
-        limparTabelas();
+    compute() {
+        this.clearTables();
         let input = document.getElementById("year");
-        let ano = parseInt(input.value, 10);
-        let year = c.calcular(ano);
-        let resposta = document.getElementById("answer");
-        for (let i = 0; i < year.length; i++) {
-            let monthName = new Date(ano, i, 1).toLocaleString("en", {month: "long"});
+        let year = parseInt(input.value, 10);
+        let months = this.c.computeYear(year);
+        let answer = document.getElementById("answer");
+        for (let i = 0; i < months.length; i++) {
+            let monthName = new Date(year, i, 1).toLocaleString("en", { month: "long" });
             let name = monthName.charAt(0).toUpperCase() + monthName.slice(1);
-            resposta.appendChild(preencherMes(year[i], name));
+            answer.appendChild(this.fillMonth(months[i], name));
         }
         return false;
     }
-    function registerEvents() {
+    registerEvents() {
         let year = document.getElementById("year");
         let form = document.forms[0];
-        form.onsubmit = calcular;
+        form.onsubmit = this.compute.bind(this);
         year.focus();
     }
-    return {registerEvents};
 }
 let gui = new GUI();
 gui.registerEvents();

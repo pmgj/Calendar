@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+    <tlib-version>1.0</tlib-version>
+    <short-name>custom</short-name>
+    <uri>http://sites.google.com/site/paulomgj/</uri>
+    <tag>
+        <name>Calendar</name>
+        <tag-class>tags.CalendarTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>year</name>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Integer</type>
+        </attribute>
+        <attribute>
+            <name>month</name>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Integer</type>
+        </attribute>
+    </tag>
+</taglib>

@@ -1,7 +1,6 @@
-class Day {
-    constructor(dia, mensagem) {
-        this.dia = dia;
-        this.mensagem = mensagem;
+export default class Day {
+    constructor(day, message) {
+        this.day = day;
+        this.message = message;
     }
 }
-export {Day};
