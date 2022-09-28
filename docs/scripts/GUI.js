@@ -5,7 +5,7 @@ class GUI {
         this.c = new Calendar();
     }
     clearTables() {
-        let answer = document.getElementById("answer");
+        let answer = document.querySelector("main");
         answer.innerHTML = "";
     }
     dayOfWeek(day) {
@@ -47,7 +47,7 @@ class GUI {
         let input = document.getElementById("year");
         let year = parseInt(input.value, 10);
         let months = this.c.computeYear(year);
-        let answer = document.getElementById("answer");
+        let answer = document.querySelector("main");
         for (let i = 0; i < months.length; i++) {
             let monthName = new Date(year, i, 1).toLocaleString("en", { month: "long" });
             let name = monthName.charAt(0).toUpperCase() + monthName.slice(1);

@@ -16,7 +16,7 @@ table {
 th,
 td {
     border: 1px solid black;
-    height: 1.5em;
+    height: 2em;
     width: 2em;
     text-align: center;
 }
@@ -31,10 +31,12 @@ th {
     font-size: 90%;
 }
 
-div {
+main {
     width: 90%;
     margin: 0 auto;
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 caption {
@@ -52,28 +54,4 @@ td:first-child,
 
 input {
     width: 5em;
-}
-
-@media (max-width: 650px) {
-    div {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (min-width: 651px) and (max-width: 850px) {
-    div {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (min-width: 851px) and (max-width: 1100px) {
-    div {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-}
-
-@media (min-width: 1101px) {
-    div {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
 }
