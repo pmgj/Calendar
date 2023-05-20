@@ -45,7 +45,7 @@ class GUI {
     compute() {
         this.clearTables();
         let input = document.getElementById("year");
-        let year = parseInt(input.value, 10);
+        let year = input.valueAsNumber;
         let months = this.c.computeYear(year);
         let answer = document.querySelector("main");
         for (let i = 0; i < months.length; i++) {
