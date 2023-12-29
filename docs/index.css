@@ -3,55 +3,23 @@ body {
 }
 
 fieldset {
-    width: 13em;
-    margin: auto;
-}
-
-table {
-    border-collapse: collapse;
-    margin-right: 1em;
-    margin-top: 1em;
-}
-
-th,
-td {
-    border: 1px solid black;
-    height: 2em;
-    width: 2em;
-    text-align: center;
-}
-
-td {
-    font-weight: bold;
-}
-
-th {
-    font-weight: normal;
-    font-style: italic;
-    font-size: 90%;
+    width: 10em;
 }
 
 main {
-    width: 90%;
-    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-caption {
-    font-weight: bold;
-    color: #555;
-    font-size: 1.35em;
-    line-height: 1.35em;
+table {
+    table-layout: fixed;
 }
 
-th:first-child,
-td:first-child,
-.holiday {
-    color: red;
+td {
+    text-align: center;
 }
 
-input {
-    width: 5em;
+table tr {
+    height: 50px;
 }

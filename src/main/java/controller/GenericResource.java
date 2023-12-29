@@ -23,8 +23,8 @@ public class GenericResource {
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public Year getCalendar(@PathParam("year") int year, @Context Request request) {
         Variant.VariantListBuilder vb = Variant.VariantListBuilder.newInstance();
-        vb.mediaTypes(MediaType.APPLICATION_XML_TYPE, MediaType.APPLICATION_JSON_TYPE).languages(new Locale("pt"),
-                new Locale("en"), new Locale("es"), new Locale("fr"));
+        vb.mediaTypes(MediaType.APPLICATION_XML_TYPE, MediaType.APPLICATION_JSON_TYPE).languages(Locale.of("pt"),
+                Locale.of("en"), Locale.of("es"), Locale.of("fr"));
         List<Variant> variants = vb.build();
         Variant v = request.selectVariant(variants);
         return calendar.computeYear(year, v.getLanguage());
@@ -35,8 +35,8 @@ public class GenericResource {
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public Year getCalendar(@PathParam("year") int year, @PathParam("month") int month, @Context Request request) {
         Variant.VariantListBuilder vb = Variant.VariantListBuilder.newInstance();
-        vb.mediaTypes(MediaType.APPLICATION_XML_TYPE, MediaType.APPLICATION_JSON_TYPE).languages(new Locale("pt"),
-                new Locale("en"), new Locale("es"), new Locale("fr"));
+        vb.mediaTypes(MediaType.APPLICATION_XML_TYPE, MediaType.APPLICATION_JSON_TYPE).languages(Locale.of("pt"),
+                Locale.of("en"), Locale.of("es"), Locale.of("fr"));
         List<Variant> variants = vb.build();
         Variant v = request.selectVariant(variants);
         return calendar.computeMonth(year, month - 1, v.getLanguage());

@@ -14,27 +14,34 @@ class GUI {
     }
     fillMonth(date, monthName) {
         let table = document.createElement("table");
-        let tr = table.insertRow(0);
+        table.className = "table table-bordered caption-top w-25 me-4";
         let caption = document.createElement("caption");
+        caption.className = "text-center fw-bold fs-3";
         caption.innerHTML = monthName;
         table.appendChild(caption);
-        tr = table.insertRow(1);
+        let thead = table.createTHead();
+        thead.className = "table-dark";
+        let tr = thead.insertRow(0);
         for (let i = 0; i < 7; i++) {
             let day = document.createElement("th");
+            day.className = "text-center";
             day.innerHTML = this.dayOfWeek(i);
             tr.appendChild(day);
         }
-        table.appendChild(tr);
-        for (let i = 0; i < date.length; i++) {
+        let tbody = table.createTBody();
+        for (let i = 0, td; i < date.length; i++) {
+            let sunday = false;
             if (i % 7 === 0) {
-                tr = table.insertRow(-1);
+                tr = tbody.insertRow();
+                sunday = true;
             }
             if (date[i].day === 0) {
-                tr.insertCell(-1);
+                td = tr.insertCell();
             } else {
-                let td = tr.insertCell(-1);
+                td = tr.insertCell();
+                if(sunday) td.className = "fw-bold bg-danger";
                 if (date[i].message) {
-                    td.className = "holiday";
+                    td.className = "fw-bold bg-danger";
                     td.title = date[i].message;
                 }
                 td.textContent = date[i].day;
@@ -57,9 +64,10 @@ class GUI {
     }
     registerEvents() {
         let year = document.getElementById("year");
-        let form = document.forms[0];
-        form.onsubmit = this.compute.bind(this);
+        year.onchange = this.compute.bind(this);
         year.focus();
+        year.value = new Date().getFullYear();
+        this.compute();
     }
 }
 let gui = new GUI();

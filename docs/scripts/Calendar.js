@@ -4,7 +4,7 @@ import Day from "./Day.js";
 export default class Calendar {
     constructor() {
         this.movableHolidays = [];
-        this.fixedHolidays = [new Holiday(1, 1, "Confraternização Universal"), new Holiday(21, 4, "Tiradentes"), new Holiday(1, 5, "Dia do Trabalho"), new Holiday(24, 6, "São João"), new Holiday(16, 7, "Nossa Senhora do Carmo"), new Holiday(7, 9, "Independência do Brasil"), new Holiday(12, 10, "Nossa Senhora Aparecida"), new Holiday(28, 10, "Dia do Servidor Público"), new Holiday(2, 11, "Finados"), new Holiday(15, 11, "Proclamação da República"), new Holiday(8, 12, "Nossa Senhora da Conceição"), new Holiday(25, 12, "Natal"), new Holiday(31, 12, "Ano Novo")];
+        this.fixedHolidays = [new Holiday(1, 1, "Confraternização Universal"), new Holiday(21, 4, "Tiradentes"), new Holiday(1, 5, "Dia do Trabalho"), new Holiday(24, 6, "São João"), new Holiday(16, 7, "Nossa Senhora do Carmo"), new Holiday(7, 9, "Independência do Brasil"), new Holiday(12, 10, "Nossa Senhora Aparecida"), new Holiday(28, 10, "Dia do Servidor Público"), new Holiday(2, 11, "Finados"), new Holiday(15, 11, "Proclamação da República"), new Holiday(20, 11, "Dia da Consciência Negra"), new Holiday(8, 12, "Nossa Senhora da Conceição"), new Holiday(25, 12, "Natal"), new Holiday(31, 12, "Ano Novo")];
     }
     easter(year) {
         let a = year % 19;
