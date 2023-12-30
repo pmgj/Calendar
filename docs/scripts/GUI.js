@@ -3,14 +3,15 @@ import Calendar from "./Calendar.js";
 class GUI {
     constructor() {
         this.c = new Calendar();
+        this.year = null;
     }
     clearTables() {
         let answer = document.querySelector("main");
         answer.innerHTML = "";
     }
     dayOfWeek(day) {
-        let nomes = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        return nomes[day];
+        let monthName = new Date(2023, 0, day + 1).toLocaleString(navigator.language, { weekday: "short" });
+        return (monthName.charAt(0).toUpperCase() + monthName.slice(1)).slice(0, 3);
     }
     fillMonth(date, monthName) {
         let table = document.createElement("table");
@@ -51,22 +52,21 @@ class GUI {
     }
     compute() {
         this.clearTables();
-        let input = document.getElementById("year");
-        let year = input.valueAsNumber;
+        let year = this.year.valueAsNumber;
         let months = this.c.computeYear(year);
         let answer = document.querySelector("main");
         for (let i = 0; i < months.length; i++) {
-            let monthName = new Date(year, i, 1).toLocaleString("en", { month: "long" });
+            let monthName = new Date(year, i, 1).toLocaleString(navigator.language, { month: "long" });
             let name = monthName.charAt(0).toUpperCase() + monthName.slice(1);
             answer.appendChild(this.fillMonth(months[i], name));
         }
         return false;
     }
     registerEvents() {
-        let year = document.getElementById("year");
-        year.onchange = this.compute.bind(this);
-        year.focus();
-        year.value = new Date().getFullYear();
+        this.year = document.getElementById("year");
+        this.year.onchange = this.compute.bind(this);
+        this.year.focus();
+        this.year.value = new Date().getFullYear();
         this.compute();
     }
 }
