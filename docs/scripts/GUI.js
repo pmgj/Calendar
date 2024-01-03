@@ -13,9 +13,11 @@ class GUI {
         let monthName = new Date(2023, 0, day + 1).toLocaleString(navigator.language, { weekday: "short" });
         return (monthName.charAt(0).toUpperCase() + monthName.slice(1)).slice(0, 3);
     }
-    fillMonth(date, monthName) {
+    fillMonth(date, month) {
+        let mName = new Date(this.year.valueAsNumber, month, 1).toLocaleString(navigator.language, { month: "long" });
+        let monthName = mName.charAt(0).toUpperCase() + mName.slice(1);
         let table = document.createElement("table");
-        table.className = "table table-bordered caption-top w-25 me-4";
+        table.className = "table table-bordered caption-top mx-3";
         let caption = document.createElement("caption");
         caption.className = "text-center fw-bold fs-3";
         caption.innerHTML = monthName;
@@ -40,9 +42,15 @@ class GUI {
                 td = tr.insertCell();
             } else {
                 td = tr.insertCell();
-                if(sunday) td.className = "fw-bold bg-danger";
+                let today = new Date();
+                today.setHours(0, 0, 0, 0);
+                let x = new Date(this.year.valueAsNumber, month, date[i].day);
+                if (today.valueOf() == x.valueOf()) {
+                    td.className = "fw-bold bg-primary text-white";
+                }
+                if (sunday) td.className = "fw-bold bg-danger text-white";
                 if (date[i].message) {
-                    td.className = "fw-bold bg-danger";
+                    td.className = "fw-bold bg-danger text-white";
                     td.title = date[i].message;
                 }
                 td.textContent = date[i].day;
@@ -56,9 +64,7 @@ class GUI {
         let months = this.c.computeYear(year);
         let answer = document.querySelector("main");
         for (let i = 0; i < months.length; i++) {
-            let monthName = new Date(year, i, 1).toLocaleString(navigator.language, { month: "long" });
-            let name = monthName.charAt(0).toUpperCase() + monthName.slice(1);
-            answer.appendChild(this.fillMonth(months[i], name));
+            answer.appendChild(this.fillMonth(months[i], i));
         }
         return false;
     }
