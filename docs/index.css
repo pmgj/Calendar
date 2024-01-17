@@ -2,10 +2,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-fieldset {
-    width: 10em;
-}
-
 main {
     display: flex;
     flex-wrap: wrap;
@@ -24,4 +20,9 @@ td {
 
 table tr {
     height: 50px;
+}
+
+#year  {
+    width: 6em;
+    margin: 0 auto;
 }
